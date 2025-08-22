@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Aikoshi – Anime & 18+</title>
+
+    <!-- Tailwind CDN -->
+    <script>
+      window.tailwind = { config: { darkMode: "class" } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+      html, body { 
+        font-family: "Outfit", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; 
+        scroll-behavior: smooth;
+      }
+      
+      /* Improved scrollbar */
+      * { scrollbar-width: thin; scrollbar-color: #3f3f46 #18181b; }
+      *::-webkit-scrollbar { height: 8px; width: 8px; }
+      *::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 8px; }
+      *::-webkit-scrollbar-track { background: #18181b; }
+      
+      /* Custom animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      
+      /* Glassmorphism effect */
+      .glass-effect {
+        background: rgba(20, 20, 22, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      
+      /* Gradient text */
+      .gradient-text {
+        background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      /* Card hover effects */
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      }
+      
+      /* Line clamp utility */
+      .line-clamp-1 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+      }
+      
+      .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+      
+      /* Custom checkbox style */
+      .custom-checkbox:checked {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        border-color: transparent;
+        background-color: currentColor;
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
+    <!-- HEADER -->
+    <header class="sticky top-0 z-40 border-b border-white/10 glass-effect">
+      <div class="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2">
+          <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-500 text-zinc-900 shadow-lg transition-transform hover:scale-105">★</span>
+          <span class="text-lg font-bold tracking-tight gradient-text">Aikoshi <span class="ml-1 rounded bg-emerald-500/20 px-1.5 py-0.5 text-xs font-semibold text-emerald-300 ring-1 ring-emerald-500/30">beta</span></span>
+        </a>
+
+        <div class="flex-1" aria-hidden="true"></div>
+
+        <!-- Search -->
+        <div class="relative hidden w-full max-w-md items-center md:flex">
+          <svg class="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input id="search" placeholder="Arama: başlık, tür, etiket…" class="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-9 pr-3 text-sm placeholder-zinc-500 outline-none ring-1 ring-white/5 transition-all focus:border-emerald-500/50 focus:ring-emerald-500/30" />
+        </div>
+
+        <!-- 18+ toggle -->
+        <button id="toggle18" class="group inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs text-zinc-200 transition-colors hover:bg-zinc-700">
+          <span id="toggle18Indicator" class="h-4 w-8 rounded-full bg-zinc-700 transition-all"><span class="block h-4 w-4 translate-x-0 rounded-full bg-white transition-all"></span></span>
+          <span>18+</span>
+        </button>
+
+        <!-- Theme toggle -->
+        <button id="themeBtn" class="ml-2 rounded-full border border-zinc-700 bg-zinc-800 p-2 text-zinc-200 transition-colors hover:bg-zinc-700" title="Tema">
+          <span id="themeIcon" aria-hidden="true">🌙</span>
+          <span class="sr-only">Tema değiştir</span>
+        </button>
+
+        <!-- Mobile search -->
+        <button class="md:hidden rounded-full border border-zinc-700 bg-zinc-800 p-2 text-zinc-200 transition-colors hover:bg-zinc-700" id="openSearch">🔎</button>
+      </div>
+    </header>
+
+    <!-- MOBILE SEARCH BAR -->
+    <div id="mobileSearchBar" class="hidden border-b border-white/10 bg-zinc-900/80 px-4 py-2 md:hidden">
+      <input id="searchMobile" placeholder="Ara…" class="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm outline-none ring-1 ring-white/5 transition-all focus:border-emerald-500/50 focus:ring-emerald-500/30" />
+    </div>
+
+    <!-- HERO -->
+    <section class="border-b border-white/5 bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900">
+      <div class="mx-auto grid max-w-7xl gap-6 px-4 py-8 md:grid-cols-2 md:py-12">
+        <div class="space-y-4 animate-fade-in">
+          <span class="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300 ring-1 ring-emerald-500/30">🔥 Trend</span>
+          <h1 class="text-3xl font-bold md:text-4xl bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">Bu hafta öne çıkanlar</h1>
+          <p class="max-w-prose text-sm text-zinc-300">Aradığın animeleri ve 18+ başlıkları tek yerde topla. Akıllı arama, filtreler, izlemeye devam ve detay sayfalarıyla modern bir deneyim.</p>
+          <div class="flex gap-2 pt-2">
+            <a href="#losst" class="rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white transition-all hover:from-emerald-600 hover:to-cyan-600 hover:shadow-lg">Keşfet</a>
+            <button id="openFilters" class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-200 transition-colors hover:bg-zinc-800">Filtreler</button>
+          </div>
+        </div>
+        <div class="relative h-56 overflow-hidden rounded-2xl ring-1 ring-white/10 md:h-72 card-hover">
+          <img alt="Hero" class="absolute inset-0 h-full w-full object-cover" src="https://images.unsplash.com/photo-1597047084897-51e81819a499?q=80&w=1600&auto=format&fit=crop" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10"></div>
+          <div class="absolute bottom-3 left-3 flex items-center gap-2">
+            <span class="rounded bg-amber-500/20 px-2 py-0.5 text-xs font-medium text-amber-300 ring-1 ring-amber-500/30">8.7</span>
+            <span class="rounded bg-zinc-800/80 px-2 py-0.5 text-xs">12 Bölüm</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILTER BAR -->
+    <section class="sticky top-[57px] z-30 border-b border-white/10 glass-effect">
+      <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 py-3 text-sm">
+        <div class="flex items-center gap-2">
+          <label class="text-zinc-400">Tür</label>
+          <select id="filterType" class="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1 transition-colors hover:bg-zinc-800 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30">
+            <option>Hepsi</option>
+            <option>Anime</option>
+            <option>18+</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-zinc-400">Dil</label>
+          <select id="filterLang" class="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1 transition-colors hover:bg-zinc-800 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30">
+            <option>Hepsi</option>
+            <option>SUB</option>
+            <option>DUB</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-zinc-400">Sırala</label>
+          <select id="sort" class="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1 transition-colors hover:bg-zinc-800 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30">
+            <option value="pop">Popüler</option>
+            <option value="a2z">A→Z</option>
+            <option value="z2a">Z→A</option>
+          </select>
+        </div>
+        <div class="ml-auto hidden items-center gap-2 md:flex">
+          <span class="text-xs text-zinc-400" id="countInfo">0 başlık</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTINUE WATCHING -->
+    <section class="mx-auto hidden max-w-7xl px-4 py-6" id="continueSection">
+      <div class="mb-3 flex items-center justify-between">
+        <h2 class="text-base font-semibold">İzlemeye Devam</h2>
+        <button class="text-xs text-zinc-400 transition-colors hover:text-zinc-200" id="clearContinue">Temizle</button>
+      </div>
+      <div id="continueList" class="no-scrollbar flex gap-3 overflow-x-auto pb-2"></div>
+    </section>
+
+    <!-- LIST -->
+    <main id="list" class="mx-auto max-w-7xl px-4 py-6 flex-1">
+      <div id="grid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"></div>
+
+      <div class="mt-8 flex justify-center">
+        <button id="loadMore" class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-200 transition-colors hover:bg-zinc-800 hover:text-white">Daha Fazla</button>
+      </div>
+    </main>
+
+    <!-- DETAILS MODAL -->
+    <div id="details" class="fixed inset-0 z-50 hidden place-items-center bg-black/70 p-4">
+      <div class="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 shadow-2xl">
+        <button id="closeDetails" class="absolute right-3 top-3 rounded-full bg-black/60 p-2 text-zinc-200 transition-colors hover:bg-black/80">✕</button>
+        <div class="grid gap-0 md:grid-cols-2">
+          <div class="relative aspect-[2/3]">
+            <img id="dImage" class="absolute inset-0 h-full w-full object-cover" alt="Poster" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10"></div>
+          </div>
+          <div class="space-y-4 p-6 overflow-y-auto max-h-[85vh]">
+            <h3 id="dTitle" class="text-xl font-bold"></h3>
+            <div class="flex flex-wrap gap-2 text-xs">
+              <span id="dScore" class="rounded bg-amber-500/20 px-2 py-0.5 font-medium text-amber-300 ring-1 ring-amber-500/30"></span>
+              <span id="dEpisodes" class="rounded bg-zinc-800/80 px-2 py-0.5"></span>
+              <span id="dBadges" class="flex items-center gap-1"></span>
+            </div>
+            <p id="dSynopsis" class="text-sm text-zinc-300"></p>
+            <div id="dTags" class="flex flex-wrap gap-1.5"></div>
+            <div class="flex gap-2 pt-2">
+              <button id="btnPlay" class="rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white transition-all hover:from-emerald-600 hover:to-cyan-600">İzle</button>
+              <button class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-200 transition-colors hover:bg-zinc-800">Listeye Ekle</button>
+              <button class="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-200 transition-colors hover:bg-zinc-800">İndir</button>
+            </div>
+            <div class="pt-4">
+              <h4 class="mb-2 text-sm font-semibold">Bölümler</h4>
+              <div id="dEpisodesList" class="max-h-56 space-y-2 overflow-y-auto rounded-xl border border-zinc-800 p-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGE GATE -->
+    <div id="ageGate" class="fixed inset-0 z-50 hidden place-items-center bg-black/70 p-4">
+      <div class="w-full max-w-lg rounded-2xl border border-red-500/30 bg-zinc-950 p-6 shadow-2xl ring-1 ring-white/5">
+        <div class="mb-4 flex items-start gap-3">
+          <span class="mt-1 text-xl">⚠️</span>
+          <div>
+            <h2 class="text-lg font-semibold">18+ İçerik Uyarısı</h2>
+            <p class="mt-1 text-sm text-zinc-400">Bu bölüm yetişkinlere uygun içerik barındırabilir. Devam etmeden önce 18 yaşından büyük olduğunuzu onaylayın.</p>
+          </div>
+        </div>
+        <div class="mt-4 flex justify-end gap-2">
+          <button id="cancel18" class="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-200 transition-colors hover:bg-zinc-800">Vazgeç</button>
+          <button id="accept18" class="rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-3 py-2 text-sm font-medium text-white transition-all hover:from-emerald-600 hover:to-cyan-600">18+ Onaylıyorum</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTERS SHEET (mobile/desktop quick) -->
+    <div id="filtersSheet" class="fixed inset-0 z-50 hidden place-items-end bg-black/60 p-4 md:place-items-center">
+      <div class="w-full max-w-xl rounded-2xl border border-white/10 bg-zinc-950 p-6 shadow-2xl">
+        <div class="mb-4 flex items-center justify-between">
+          <h3 class="text-base font-semibold">Filtreler</h3>
+          <button id="closeFilters" class="rounded-full bg-zinc-800 p-2 transition-colors hover:bg-zinc-700">✕</button>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="space-y-2">
+            <label class="text-sm text-zinc-400">Tür Etiketleri</label>
+            <div id="tagCloud" class="flex flex-wrap gap-2"></div>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm text-zinc-400">Dil</label>
+            <div class="flex gap-2">
+              <button data-lang="SUB" class="langBtn rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1 text-sm transition-colors hover:bg-zinc-800">SUB</button>
+              <button data-lang="DUB" class="langBtn rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1 text-sm transition-colors hover:bg-zinc-800">DUB</button>
+              <button data-lang="Hepsi" class="langBtn rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1 text-sm transition-colors hover:bg-zinc-800">Hepsi</button>
+            </div>
+            <label class="mt-4 block text-sm text-zinc-400">İçerik Tipi</label>
+            <div class="flex gap-2">
+              <button data-type="Anime" class="typeBtn rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1 text-sm transition-colors hover:bg-zinc-800">Anime</button>
+              <button data-type="18+" class="typeBtn rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1 text-sm transition-colors hover:bg-zinc-800">18+</button>
+              <button data-type="Hepsi" class="typeBtn rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1 text-sm transition-colors hover:bg-zinc-800">Hepsi</button>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end gap-2">
+          <button id="resetFilters" class="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm transition-colors hover:bg-zinc-800">Sıfırla</button>
+          <button id="applyFilters" class="rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white transition-all hover:from-emerald-600 hover:to-cyan-600">Uygula</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-10 border-t border-white/10">
+      <div class="mx-auto max-w-7xl px-4 py-6 text-xs text-zinc-400">
+        <p>© <span id="year"></span> Aikoshi. Bu arayüz, yalnızca demodur. 18 yaşından küçük kullanıcılar için uygun değildir. Lütfen yerel yasalarınıza uyun.</p>
+      </div>
+    </footer>
+
+    <script>
+      // -------------------------------------------------
+      // Data (Mock)
+      // -------------------------------------------------
+      const DATA = [
+        {
+          id: 1,
+          title: "Steel Gear: Akuma Protocol",
+          image: "https://images.unsplash.com/photo-1605649487212-47bdab064df3?q=80&w=1200&auto=format&fit=crop",
+          episodes: 12,
+          sub: true,
+          dub: false,
+          is18: false,
+          tags: ["Action", "Sci-Fi", "Cyberpunk"],
+          score: 8.7,
+          synopsis: "MegaTokyo'da kirli bir komployu açığa çıkaran cyborg bir ajanın nefes kesen hikâyesi.",
+        },
+        {
+          id: 2,
+          title: "Midnight Shrine – Forbidden Petals",
+          image: "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?q=80&w=1200&auto=format&fit=crop",
+          episodes: 8,
+          sub: true,
+          dub: true,
+          is18: true,
+          tags: ["Romance", "Drama"],
+          score: 8.4,
+          synopsis: "Gecenin sessizliğinde gizemli bir tapınakta yolları kesişen iki yabancının masalı.",
+        },
+        {
+          id: 3,
+          title: "Samurai of the Neon Rain",
+          image: "https://images.unsplash.com/photo-1597047084897-51e81819a499?q=80&w=1200&auto=format&fit=crop",
+          episodes: 24,
+          sub: true,
+          dub: false,
+          is18: false,
+          tags: ["Samurai", "Noir", "Thriller"],
+          score: 8.2,
+          synopsis: "Yağmurun hiç dinmediği bir şehirde onurunu arayan yalnız bir ronin.",
+        },
+        {
+          id: 4,
+          title: "Crimson Alchemist: Ouroboros",
+          image: "https://images.unsplash.com/photo-1620662730067-6d3a3aa45e8a?q=80&w=1200&auto=format&fit=crop",
+          episodes: 13,
+          sub: true,
+          dub: true,
+          is18: false,
+          tags: ["Fantasy", "Mystery"],
+          score: 8.6,
+          synopsis: "Yasak simyanın izinde kadim büyüler ve politik oyunlar.",
+        },
+        {
+          id: 5,
+          title: "Velvet Chains – Scarlet Nights",
+          image: "https://images.unsplash.com/photo-1546778316-dfda79f1c65b?q=80&w=1200&auto=format&fit=crop",
+          episodes: 6,
+          sub: true,
+          dub: false,
+          is18: true,
+          tags: ["18+", "Romance"],
+          score: 8.0,
+          synopsis: "Koyu sırların ördüğü ilişkiler ağı; karanlıkta kaybolan itiraflar.",
+        },
+        {
+          id: 6,
+          title: "Neon Drifters: Night Circuit",
+          image: "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?q=80&w=1200&auto=format&fit=crop",
+          episodes: 10,
+          sub: true,
+          dub: false,
+          is18: false,
+          tags: ["Racing", "Action"],
+          score: 7.9,
+          synopsis: "Neon ışıklar altında yasa dışı yarışlar ve dostluklar.",
+        },
+        {
+          id: 7,
+          title: "Arcadia Echoes",
+          image: "https://images.unsplash.com/photo-1520975922324-56c2d1ee12bf?q=80&w=1200&auto=format&fit=crop",
+          episodes: 22,
+          sub: true,
+          dub: true,
+          is18: false,
+          tags: ["Adventure", "Drama"],
+          score: 8.1,
+          synopsis: "Kaybolan bir uygarlığın yankılarını takip eden genç kâşifler.",
+        },
+        {
+          id: 8,
+          title: "Moonlit Labyrinth",
+          image: "https://images.unsplash.com/photo-1520975922324-56c2d1ee12bf?q=80&w=1200&auto=format&fit=crop",
+          episodes: 9,
+          sub: true,
+          dub: false,
+          is18: false,
+          tags: ["Mystery", "Psychological"],
+          score: 8.3,
+          synopsis: "Düş ve gerçeklik arasında sıkışan bir labirentte kayboluş.",
+        },
+        {
+          id: 9,
+          title: "31'ci orkun",
+          image: "https://images.unsplash.com/photo-1520975922324-56c2d1ee12bf?q=80&w=1200&auto=format&fit=crop",
+          episodes: 9,
+          sub: true,
+          dub: false,
+          is18: true,
+          /* ↓↓↓ TÜM BÖLÜMLER BU ADRESE GİDER ↓↓↓ */
+          isManga: true,
+          links: [
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://drive.google.com/drive/u/0/home",
+            "https://www.youtube.com/",
+            "https://open.spotify.com/intl-tr"
+          ],
+          tags: ["Mystery", "Psychological"],
+          score: 8.3,
+          synopsis: "Düş ve gerçeklik arasında sıkışan bir labirentte kayboluş.",
+        },
+        {
+          id: 9,
+          title: "eeeee",
+          image: "https://images.unsplash.com/photo-1520975922324-56c2d1ee12bf?q=80&w=1200&auto=format&fit=crop",
+          episodes: 11,
+          sub: true,
+          dub: false,
+          is18: true,
+          /* ↓↓↓ TÜM BÖLÜMLER BU ADRESE GİDER ↓↓↓ */
+          isManga: true,
+          links: [
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            "https://drive.google.com/drive/u/0/home",
+            "https://www.youtube.com/",
+            "https://open.spotify.com/intl-tr",
+            "https://www.youtube.com/",
+            "https://www.youtube.com/",
+            
+          ],
+          tags: ["Mystery", "Psychological"],
+          score: 8.3,
+          synopsis: "Düş ve gerçeklik arasında sıkışan bir labirentte kayboluş.",
+        },
+      ];
+
+      // State
+      let state = {
+        page: 1,
+        perPage: 10,
+        query: "",
+        type: "Hepsi", // Hepsi | Anime | 18+
+        lang: "Hepsi", // Hepsi | SUB | DUB
+        only18: false,
+        selected: null,
+        tags: new Set(),
+        continue: JSON.parse(localStorage.getItem("aikoshi-continue") || "[]"),
+      };
+
+      // Elements
+      const grid = document.getElementById("grid");
+      const loadMore = document.getElementById("loadMore");
+      const search = document.getElementById("search");
+      const searchMobile = document.getElementById("searchMobile");
+      const openSearch = document.getElementById("openSearch");
+      const filterType = document.getElementById("filterType");
+      const filterLang = document.getElementById("filterLang");
+      const sortSel = document.getElementById("sort");
+      const countInfo = document.getElementById("countInfo");
+      const details = document.getElementById("details");
+      const dImage = document.getElementById("dImage");
+      const dTitle = document.getElementById("dTitle");
+      const dScore = document.getElementById("dScore");
+      const dEpisodes = document.getElementById("dEpisodes");
+      const dBadges = document.getElementById("dBadges");
+      const dSynopsis = document.getElementById("dSynopsis");
+      const dTags = document.getElementById("dTags");
+      const dEpisodesList = document.getElementById("dEpisodesList");
+      const btnPlay = document.getElementById("btnPlay");
+      const closeDetails = document.getElementById("closeDetails");
+
+      const ageGate = document.getElementById("ageGate");
+      const toggle18 = document.getElementById("toggle18");
+      const toggle18Indicator = document.getElementById("toggle18Indicator");
+      const accept18 = document.getElementById("accept18");
+      const cancel18 = document.getElementById("cancel18");
+
+      const openFilters = document.getElementById("openFilters");
+      const filtersSheet = document.getElementById("filtersSheet");
+      const closeFilters = document.getElementById("closeFilters");
+      const tagCloud = document.getElementById("tagCloud");
+      const resetFilters = document.getElementById("resetFilters");
+      const applyFilters = document.getElementById("applyFilters");
+
+      const continueSection = document.getElementById("continueSection");
+      const continueList = document.getElementById("continueList");
+      const clearContinue = document.getElementById("clearContinue");
+
+      const year = document.getElementById("year");
+      year.textContent = new Date().getFullYear();
+
+      // Helpers
+      function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+      function makeBadge(text, variant = "default") {
+        const base = "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1";
+        const map = {
+          default: base + " bg-zinc-800/80 text-zinc-200 ring-zinc-700",
+          green: base + " bg-emerald-500/15 text-emerald-300 ring-emerald-500/30",
+          pink: base + " bg-pink-500/15 text-pink-300 ring-pink-500/30",
+          amber: base + " bg-amber-500/15 text-amber-300 ring-amber-500/30",
+          red: base + " bg-red-500/15 text-red-300 ring-red-500/30",
+        };
+        const span = document.createElement("span");
+        span.className = map[variant] || map.default;
+        span.textContent = text;
+        return span;
+      }
+
+      function createCard(item) {
+        const btn = document.createElement("button");
+        btn.className = "group flex w-full flex-col gap-3 text-left focus:outline-none card-hover";
+        btn.innerHTML = `
+          <div class="relative">
+            <div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 ring-1 ring-zinc-800">
+              <img alt="${item.title}" class="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform group-hover:scale-105" src="${item.image}" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10"></div>
+              ${item.is18 ? '<div class="absolute left-2 top-2 z-10">' + makeBadge('18+','red').outerHTML + '</div>' : ''}
+              <div class="absolute bottom-2 right-2 z-10">${makeBadge(''+item.score,'amber').outerHTML}</div>
+            </div>
+            <div class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 group-hover:ring-white/25"></div>
+            <div class="absolute left-2 bottom-2 flex items-center gap-1.5">
+              ${item.sub ? makeBadge('SUB','green').outerHTML : ''}
+              ${item.dub ? makeBadge('DUB','pink').outerHTML : ''}
+              ${makeBadge('Ep '+item.episodes).outerHTML}
+            </div>
+          </div>
+          <div class="px-0.5">
+            <h3 class="line-clamp-1 text-sm font-semibold text-zinc-100">${item.title}</h3>
+            <p class="line-clamp-2 text-xs text-zinc-400">${item.synopsis}</p>
+            <div class="mt-1.5 flex flex-wrap gap-1.5">${item.tags.slice(0,3).map(t=>makeBadge(t).outerHTML).join("")}</div>
+          </div>`;
+        btn.addEventListener("click", () => openDetails(item));
+        return btn;
+      }
+
+      function openDetails(item) {
+        state.selected = item;
+        dImage.src = item.image;
+        dTitle.textContent = item.title;
+        dScore.textContent = String(item.score);
+        dEpisodes.textContent = item.episodes + " Bölüm";
+        dBadges.innerHTML = (item.is18 ? makeBadge('18+','red').outerHTML : '') + (item.sub ? makeBadge('SUB','green').outerHTML : '') + (item.dub ? makeBadge('DUB','pink').outerHTML : '');
+        dSynopsis.textContent = item.synopsis;
+        dTags.innerHTML = item.tags.map(t=>makeBadge(t).outerHTML).join("");
+        /* ↓↓↓ Bölüm listesi: links varsa anchor (<a>) olarak çiz, yoksa eski butonları kullan ↓↓↓ */
+        if (Array.isArray(item.links) && item.links.length) {
+          dEpisodesList.innerHTML = item.links.map((href, i) => `
+            <a href="${href}" target="_blank" rel="noopener"
+               class="flex w-full items-center justify-between rounded-lg bg-zinc-900/60 px-3 py-2 text-left text-sm text-emerald-300 hover:bg-zinc-800 hover:underline">
+              <span>Ep ${i+1}</span>
+              <span class="text-xs text-zinc-400">24 dk</span>
+            </a>
+          `).join("");
+        } else {
+          dEpisodesList.innerHTML = Array.from({length:item.episodes}).map((_,i)=>`
+            <button class="flex w-full items-center justify-between rounded-lg bg-zinc-900/60 px-3 py-2 text-left text-sm text-zinc-200 transition-colors hover:bg-zinc-800">
+              <span>Ep ${i+1}</span><span class="text-xs text-zinc-400">24 dk</span>
+            </button>`).join("");
+        }
+        details.classList.remove("hidden");
+      }
+
+      closeDetails.addEventListener("click", () => details.classList.add("hidden"));
+      details.addEventListener("click", (e) => { if (e.target === details) details.classList.add("hidden"); });
+
+      btnPlay.addEventListener("click", () => {
+        if (!state.selected) return;
+        // Eğer linkler tanımlıysa ilkine git
+        if (Array.isArray(state.selected.links) && state.selected.links.length) {
+          window.open(state.selected.links[0], "_blank", "noopener");
+          return;
+        }
+        // örnek olarak ep 1'e başlandı kabul edelim
+        const entry = { id: state.selected.id, title: state.selected.title, image: state.selected.image, ep: 1, progress: 12 };
+        const arr = state.continue.filter(x=>x.id!==entry.id);
+        arr.unshift(entry);
+        state.continue = arr.slice(0, 12);
+        localStorage.setItem("aikoshi-continue", JSON.stringify(state.continue));
+        renderContinue();
+      });
+
+      function renderContinue() {
+        if (!state.continue.length) {
+          continueSection.classList.add("hidden");
+          return;
+        }
+        continueSection.classList.remove("hidden");
+        continueList.innerHTML = state.continue.map(c=>`
+          <div class="relative h-28 w-48 shrink-0 overflow-hidden rounded-xl ring-1 ring-white/10 card-hover">
+            <img src="${c.image}" class="absolute inset-0 h-full w-full object-cover" alt="${c.title}" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70"></div>
+            <div class="absolute inset-x-0 bottom-0 h-1 bg-zinc-700">
+              <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500" style="width:${clamp(c.progress,0,100)}%"></div>
+            </div>
+            <div class="absolute left-2 bottom-4 right-2 text-xs font-medium">${c.title} – Ep ${c.ep}</div>
+          </div>`).join("");
+      }
+
+      clearContinue.addEventListener("click", ()=>{
+        state.continue = [];
+        localStorage.removeItem("aikoshi-continue");
+        renderContinue();
+      });
+
+      function applyQuery(val) {
+        state.query = val.toLowerCase();
+        state.page = 1; render();
+      }
+
+      search?.addEventListener("input", (e)=> applyQuery(e.target.value));
+      searchMobile?.addEventListener("input", (e)=> applyQuery(e.target.value));
+      openSearch?.addEventListener("click", ()=> {
+        const el = document.getElementById("mobileSearchBar");
+        el.classList.toggle("hidden");
+        document.getElementById("searchMobile").focus();
+      });
+
+      filterType.addEventListener("change", ()=>{ state.type = filterType.value; state.page = 1; render(); });
+      filterLang.addEventListener("change", ()=>{ state.lang = filterLang.value; state.page = 1; render(); });
+      sortSel.addEventListener("change", ()=>{ state.sort = sortSel.value; state.page = 1; render(); });
+
+      // 18+ toggle with Age Gate
+      toggle18.addEventListener("click", ()=> {
+        if (!state.only18) {
+          ageGate.classList.remove("hidden");
+        } else {
+          state.only18 = false; // kapat
+          toggle18Indicator.firstElementChild.style.transform = "translateX(0px)";
+          toggle18Indicator.classList.remove("bg-emerald-500/40");
+          render();
+        }
+      });
+      accept18.addEventListener("click", ()=>{
+        state.only18 = true;
+        ageGate.classList.add("hidden");
+        toggle18Indicator.firstElementChild.style.transform = "translateX(1.0rem)"; // 16px
+        toggle18Indicator.classList.add("bg-emerald-500/40");
+        render();
+      });
+      cancel18.addEventListener("click", ()=>{
+        ageGate.classList.add("hidden");
+      });
+
+      // Filters sheet
+      openFilters.addEventListener("click", ()=> filtersSheet.classList.remove("hidden"));
+      closeFilters.addEventListener("click", ()=> filtersSheet.classList.add("hidden"));
+      filtersSheet.addEventListener("click", (e)=>{ if (e.target===filtersSheet) filtersSheet.classList.add("hidden"); });
+
+      // tag cloud
+      const ALL_TAGS = Array.from(new Set(DATA.flatMap(d=>d.tags))).sort();
+      tagCloud.innerHTML = ALL_TAGS.map(t=>`<button data-tag="${t}" class="tagBtn rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs transition-colors hover:bg-zinc-800">${t}</button>`).join("");
+      tagCloud.addEventListener("click", (e)=>{
+        const btn = e.target.closest(".tagBtn"); if (!btn) return;
+        const t = btn.dataset.tag;
+        if (state.tags.has(t)) { state.tags.delete(t); btn.classList.remove("ring-emerald-400","border-emerald-400"); }
+        else { state.tags.add(t); btn.classList.add("ring-emerald-400","border-emerald-400"); }
+      });
+
+      // lang/type quick buttons inside sheet
+      document.querySelectorAll(".langBtn").forEach(b=> b.addEventListener("click", ()=>{ state.lang = b.dataset.lang; }));
+      document.querySelectorAll(".typeBtn").forEach(b=> b.addEventListener("click", ()=>{ state.type = b.dataset.type; }));
+
+      resetFilters.addEventListener("click", ()=>{
+        state.tags.clear();
+        state.lang = "Hepsi"; state.type = "Hepsi";
+        tagCloud.querySelectorAll(".tagBtn").forEach(btn=> btn.classList.remove("ring-emerald-400","border-emerald-400"));
+      });
+      applyFilters.addEventListener("click", ()=>{ filtersSheet.classList.add("hidden"); render(); });
+
+      // Theme
+      const themeBtn = document.getElementById("themeBtn");
+      const themeIcon = document.getElementById("themeIcon");
+      function setTheme(mode) {
+        const root = document.documentElement;
+        if (mode === "light") { root.classList.remove("dark"); themeIcon.textContent = "🌞"; }
+        else { root.classList.add("dark"); themeIcon.textContent = "🌙"; }
+        localStorage.setItem("aikoshi-theme", mode);
+      }
+      themeBtn.addEventListener("click", ()=>{
+        const mode = document.documentElement.classList.contains("dark") ? "light" : "dark";
+        setTheme(mode);
+      });
+      (function initTheme(){ const saved=localStorage.getItem("aikoshi-theme"); if(saved) setTheme(saved); })();
+
+      // Render
+      function getFiltered() {
+        let items = DATA.slice();
+        if (state.only18) items = items.filter(i=>i.is18);
+        if (state.type !== "Hepsi") items = items.filter(i=> state.type === "18+" ? i.is18 : !i.is18);
+        if (state.lang !== "Hepsi") items = items.filter(i=> state.lang==="SUB" ? i.sub : i.dub);
+        if (state.tags.size) items = items.filter(i=> i.tags.some(t=> state.tags.has(t)) );
+        if (state.query) items = items.filter(i=> i.title.toLowerCase().includes(state.query) || i.tags.some(t=> t.toLowerCase().includes(state.query)));
+        if (state.sort === "a2z") items.sort((a,b)=> a.title.localeCompare(b.title));
+        if (state.sort === "z2a") items.sort((a,b)=> b.title.localeCompare(a.title));
+        // pop default -> score desc
+        if (state.sort === "pop") items.sort((a,b)=> b.score - a.score);
+        return items;
+      }
+
+      function render() {
+        const all = getFiltered();
+        countInfo.textContent = `${all.length} başlık`;
+        const end = state.page * state.perPage;
+        const view = all.slice(0, end);
+        grid.innerHTML = "";
+        view.forEach(item=> grid.appendChild(createCard(item)));
+        loadMore.classList.toggle("hidden", end >= all.length);
+      }
+
+      loadMore.addEventListener("click", ()=>{ state.page++; render(); });
+
+      // Init
+      render();
+      renderContinue();
+    </script>
+  </body>
+</html>
