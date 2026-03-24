@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="Türkçe çeviri, en iyi kalitede manga arşivi. Binlerce manga, hızlı okuma ve düzenli güncellemeler." />
+    <meta name="keywords" content="manga, türkçe manga, manga oku, anime, webtoon, türk manga arşivi" />
+    <meta name="author" content="Türk Manga Arşivi" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#ff00ff" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Manga Arşivi" />
+    
+    <title>Türk Manga Arşivi</title>
+
+    <script>
+      window.tailwind = { config: { darkMode: "class" } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col">
+
+    <div id="notification" class="notification">
+      <span id="notifIcon">✓</span>
+      <span id="notifText">Bildirim</span>
+    </div>
+
+    <button class="contact-btn-fixed" onclick="openContactModal()" title="Bize Ulaşın">📩</button>
+
+    <header class="sticky top-0 z-40 border-b border-white/10 glass-effect">
+      <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
+        <a href="#" class="flex items-center gap-2" aria-label="Ana Sayfa">
+          <span class="text-lg sm:text-xl font-extrabold tracking-tight neon-gradient-text">Türk Manga Arşivi</span>
+        </a>
+        <div class="flex-1" aria-hidden="true"></div>
+        <div class="relative hidden w-full max-w-md items-center md:flex" role="search">
+          <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input id="search" type="search" placeholder="Manga ara..." class="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-9 pr-3 text-sm placeholder-zinc-500 outline-none ring-1 ring-transparent transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/30" autocomplete="off" />
+        </div>
+        <label class="toggle-switch" title="Violent/Kanlı içerikli mangaları göster">
+          <input type="checkbox" id="plus18Toggle">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">+18</span>
+        </label>
+        <div class="flex items-center gap-2 md:hidden">
+          <button class="rounded-full border border-zinc-700 bg-zinc-800 p-2 text-zinc-200 transition-colors hover:bg-zinc-700" id="openSearch">🔎</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="mobileSearchBar" class="hidden border-b border-white/10 bg-zinc-900/90 px-4 py-2 md:hidden">
+      <div class="flex items-center gap-2">
+        <input id="searchMobile" type="search" placeholder="Manga ara..." class="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm outline-none ring-1 ring-transparent transition-all focus:border-fuchsia-500/50 focus:ring-fuchsia-500/30" autocomplete="off" />
+        <button id="closeMobileSearch" class="rounded-full bg-zinc-800 p-2 text-zinc-400 hover:text-white transition-colors">✕</button>
+      </div>
+    </div>
+
+    <div id="plus18Banner" class="hidden">
+      <div class="mx-auto max-w-7xl px-4 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-fuchsia-300 text-sm">
+          <span class="text-lg">⚠️</span>
+          <span>+18 modu aktif: Kanlı/violent içerikli mangalar gösteriliyor</span>
+        </div>
+        <button id="closePlus18Banner" class="text-fuchsia-300 hover:text-white transition-colors">✕</button>
+      </div>
+    </div>
+
+    <div id="activeFilters" class="hidden mx-auto max-w-7xl px-4 py-2">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-sm text-zinc-400">Filtreler:</span>
+        <div id="filterTags" class="flex items-center gap-2 flex-wrap"></div>
+      </div>
+    </div>
+
+    <section class="border-b border-white/5 bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 overflow-visible">
+      <div class="mx-auto grid max-w-7xl gap-6 md:gap-8 px-4 py-8 md:py-12 md:grid-cols-3">
+        <div class="space-y-3 md:space-y-4 animate-fade-in md:col-span-1">
+          <span class="featured-badge expected">En Çok Beklenen</span>
+          <h1 class="text-3xl sm:text-4xl font-extrabold md:text-5xl neon-gradient-text leading-tight">En Çok Beklenen <br><span class="text-fuchsia-400">Mangalar</span></h1>
+          <p class="max-w-prose text-sm sm:text-base text-zinc-300 pt-1 md:pt-2">Türkçe çeviri, en iyi kalitede manga arşivi.</p>
+          <div class="flex flex-wrap gap-3 pt-3 md:pt-4">
+            <button id="toggleCategories" class="categories-btn">
+              <span>Kategoriler</span>
+              <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+          </div>
+        </div>
+        <div id="featuredCards" class="md:col-span-2 grid grid-cols-2 gap-3 md:gap-4"></div>
+      </div>
+    </section>
+
+    <main id="list" class="mx-auto max-w-7xl px-3 sm:px-4 py-6 sm:py-8 flex-1">
+      <div class="flex items-center justify-between mb-4 md:mb-6">
+        <h2 class="text-xl md:text-2xl font-bold text-white">Tüm Mangalar</h2>
+        <span id="countInfo" class="text-sm text-zinc-500">0 manga</span>
+      </div>
+      <div id="skeletonGrid" class="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"></div>
+      <div id="grid" class="hidden grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"></div>
+      <div id="pagination" class="pagination"></div>
+    </main>
+
+    <div id="details" class="details-modal">
+      <div class="details-modal-content max-h-[95vh] md:max-h-[90vh]">
+        <button id="closeDetails" class="absolute right-3 top-3 md:right-4 md:top-4 z-10 rounded-full bg-black/70 p-2 text-zinc-200 hover:bg-black/90 transition-colors">✕</button>
+        <div class="grid md:grid-cols-3 lg:grid-cols-7">
+          <div class="relative aspect-[16/9] md:aspect-[2/3] md:col-span-1 lg:col-span-2">
+            <img id="dImage" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 md:bg-gradient-to-t md:from-black/40"></div>
+            <div id="dPlus18Badge" class="badge-plus18 hidden">+18</div>
+            <div id="dNewBadge" class="badge-new hidden">YENİ</div>
+          </div>
+          <div class="space-y-4 md:space-y-6 p-4 md:p-6 md:col-span-2 lg:col-span-5 overflow-y-auto" style="max-height: calc(90vh - 200px);">
+            <header>
+              <div class="flex items-center gap-2 md:gap-3 mb-2 flex-wrap">
+                <h3 id="dTitle" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white"></h3>
+                <span id="dPlus18Tag" class="hidden bg-fuchsia-600 text-white px-2 md:px-3 py-0.5 md:py-1 rounded-lg text-xs md:text-sm font-bold">+18</span>
+                <span id="dNewTag" class="hidden bg-fuchsia-600 text-white px-2 md:px-3 py-0.5 md:py-1 rounded-lg text-xs md:text-sm font-bold">YENİ</span>
+              </div>
+              <div class="flex flex-wrap gap-2 text-xs">
+                <span id="dEpisodes" class="rounded bg-zinc-800/80 px-2 md:px-3 py-1"></span>
+                <span id="dAddedDate" class="rounded bg-zinc-800/80 px-2 md:px-3 py-1 text-zinc-400"></span>
+              </div>
+            </header>
+            <p id="dSynopsis" class="text-sm md:text-base text-zinc-300 line-clamp-4 md:line-clamp-none"></p>
+            <div id="dTags" class="flex flex-wrap gap-1.5 md:gap-2 border-t border-zinc-800 pt-3 md:pt-4"></div>
+            <div>
+              <div class="flex items-center justify-between mb-2 md:mb-3">
+                <h4 class="text-base md:text-lg font-semibold border-l-2 border-fuchsia-500 pl-2">Bölümler</h4>
+                <button id="episodeSort" class="sort-toggle text-xs md:text-sm py-1 px-2 md:px-3" onclick="toggleEpisodeSort()">
+                  <span>↓</span><span>En Yeni</span>
+                </button>
+              </div>
+              <div id="dEpisodesList" class="max-h-48 md:max-h-64 overflow-y-auto rounded-xl border border-zinc-800 p-3 md:p-4 bg-zinc-900/50 space-y-2 md:space-y-3"></div>
+            </div>
+            <div id="continueReading" class="hidden">
+              <button onclick="continueReading()" class="w-full py-2.5 md:py-3 bg-gradient-to-r from-fuchsia-600 to-purple-600 rounded-xl font-bold text-white text-sm md:text-base hover:opacity-90 transition-opacity">Okumaya Devam Et</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="categoriesSheet" class="categories-sheet">
+      <div class="categories-sheet-content">
+        <div class="categories-header">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div>
+                <h3 class="text-lg md:text-xl font-bold text-white">Kategori Seçimi</h3>
+                <div class="flex items-center gap-2 mt-1">
+                  <span id="categoryModeBadge" class="mode-badge normal">Normal Mod</span>
+                </div>
+              </div>
+            </div>
+            <button id="closeCategoriesSheet" class="sheet-close-btn">✕</button>
+          </div>
+        </div>
+        <div class="categories-scroll-area">
+          <div class="category-search">
+            <div class="category-search-wrapper">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              <input type="text" id="categorySearch" placeholder="Kategori ara..." autocomplete="off">
+            </div>
+          </div>
+          <div id="categoryGrid" class="category-grid"></div>
+          <div id="categoryNoResults" class="category-no-results hidden">Kategori bulunamadı.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="contactModal" class="contact-modal">
+      <div class="contact-modal-content">
+        <div class="contact-header">
+          <button class="contact-close" onclick="closeContactModal()">✕</button>
+          <h3>Bize Ulaşın</h3>
+          <p>İstediğiniz mangayı bize bildirin</p>
+        </div>
+        <div class="contact-form" id="contactFormContainer">
+          <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+            <input type="text" name="website" class="honeypot-field" tabindex="-1" autocomplete="off">
+            <div class="form-group">
+              <label for="userName">Kullanıcı Adınız</label>
+              <input type="text" id="userName" name="name" placeholder="Örn: MangaSevdalisi42" required>
+            </div>
+            <div class="form-group">
+              <label for="requestedManga">İstediğiniz Manga</label>
+              <input type="text" id="requestedManga" name="manga_request" placeholder="Manga adını yazın..." required>
+            </div>
+            <div class="form-group">
+              <label for="extraInfo">Ek Bilgi (İsteğe Bağlı)</label>
+              <textarea id="extraInfo" name="message" placeholder="Manga hakkında ek bilgi verebilirsiniz..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn"><span>Gönder</span></button>
+          </form>
+        </div>
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">✓</div>
+          <h4>Mesajınız Gönderildi!</h4>
+          <p>İsteğiniz alındı, en kısa sürede değerlendirilecektir.</p>
+        </div>
+      </div>
+    </div>
+
+    <button id="scrollTop" class="scroll-top" onclick="scrollToTop()">↑</button>
+
+    <nav class="bottom-nav">
+      <button class="bottom-nav-item active" onclick="showSection('home')"><span>Ana Sayfa</span></button>
+      <button class="bottom-nav-item" onclick="document.getElementById('openSearch').click()"><span>Ara</span></button>
+      <button class="bottom-nav-item" onclick="document.getElementById('toggleCategories').click()"><span>Kategoriler</span></button>
+    </nav>
+
+    <footer class="mt-12 border-t border-white/10">
+      <div class="mx-auto max-w-7xl px-4 py-6">
+        <p class="text-xs text-zinc-400">© <span id="year"></span> Türk Manga Arşivi. Tüm hakları saklıdır.</p>
+      </div>
+    </footer>
+
+    <script>
+      const NORMAL_CATEGORIES = ["Link Nasıl Geçilir?",];
+      const PLUS18_CATEGORIES = ["Anne", "Abla", "Abi", "Ensest", "Adult 3D Roman", "Adult Çizgi Roman", "Ahegao", "Aldatma", "Anal", 
+      "Anne-Oğul Ensest", "Aşağılama", "Ayak fetişi", "Ayak Yalama", , "Baba" ,"Baba-Kız Ensest", "Baldız", "Baştan çıkarma", "Bdsm", "Bikini", "Biseksüel",
+      "Büyük Göğüs", "Büyük Göt","Büyük Sik","BüyükAnne","Canavar","Canavar Kadın","Çifte Giriş","Çizgi Film","Çorap Fetişi","Cosplay","Crossdresser",
+      "Doktor","Dominant Kadın","Elf","Ensest","Eş Paylaşma","Esaret","Evli","Fantastik","Femdom","Futanari","Filme alma","Furry","Femboy","Gelin","Gizli Seks",
+      "Gotik","Gözlükü Kız","Grup","Hala","Hamile","Harem","Hayvan Kulakları","Hemşire","Hipnoz","Hizmetçi","Jartiyer","Kadın Polis","Kedi Kız","Kız Evlat","Kız kardeş",
+      "Köle","Küçük Göğüslü Kız","Külotlu çorap","Kurt Kız","Kuyruk","Kuzen","Lateks","Lezbiyen [Yuri]","Liseli Erkek","Liseli Kız","Mastürbasyon","Meme Sikmek",
+      "Milf","Milftoon","Mind Control","MMF üçlü","Netorare","Öğretmen","Oyun","Parodi","Pasif ~ Yaoi","Polis","Prezervatif","Public Sex","Rahibe","Renkli","Renksiz",
+      "Röntgenci","Sansürsüz","Şantaj","Sarhoş","Seks oyuncakları","Seksi iç çamaşırı","Shotacon","Şişman Adam","Şişman Kadın","Siyahi","Süper Kahraman","Tayt","Tecavüz ",
+      "Tavşan Çocuk","Tek Erkek","Tek Kadın","Teşhircilik","Teyze","Tomboy","TomGirl","Trans - Futa","Türbanlı","Türkçe Hentai Manga","Uzaylı","Vampir","Webtoon","X-Ray","Yaşlı Adam","Yeğen","Yüze oturma",
+      "Zihin Kontrolü","Zorla",];
+      
+      let DATA = [];
+      let FEATURED_IDS = [];
+      let state = {
+        currentPage: 1,
+        itemsPerPage: 12,
+        query: "",
+        selected: null,
+        tags: new Set(),
+        plus18Mode: false,
+        episodeSortDesc: true,
+        lastRead: {}
+      };
+      
+      let searchTimeout = null;
+      let touchStartY = 0;
+      let formStartTime = 0;
+
+      const KEY_PARTS = { p1: "7587c520", p2: "-de63-4305", p3: "-aacc-90853cad5c74" };
+      function getAccessKey() { return KEY_PARTS.p1 + KEY_PARTS.p2 + KEY_PARTS.p3; }
+
+      function getTurkeyDate() {
+        const now = new Date();
+        const turkeyOffset = 3 * 60 * 60 * 1000;
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+        return new Date(utc + turkeyOffset);
+      }
+
+      function parseDate(dateStr) {
+        if (!dateStr) return new Date(0);
+        const parts = dateStr.split('.');
+        if (parts.length !== 3) return new Date(0);
+        return new Date(Date.UTC(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0])));
+      }
+
+      function isNewManga(addedDate) {
+        if (!addedDate) return false;
+        const mangaDate = parseDate(addedDate);
+        const today = getTurkeyDate();
+        return mangaDate.getUTCDate() === today.getDate() && 
+               mangaDate.getUTCMonth() === today.getMonth() && 
+               mangaDate.getUTCFullYear() === today.getFullYear();
+      }
+
+      function getCache() {
+        try {
+          const cached = localStorage.getItem('mangaCache');
+          if (cached) {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < 3600000) return data;
+          }
+        } catch (e) {}
+        return null;
+      }
+
+      function setCache(data) {
+        try {
+          localStorage.setItem('mangaCache', JSON.stringify({ data, timestamp: Date.now() }));
+        } catch (e) {}
+      }
+
+      async function loadData() {
+        const cached = getCache();
+        if (cached && Array.isArray(cached.mangas) && cached.mangas.length > 0) {
+          DATA = cached.mangas;
+          FEATURED_IDS = cached.featured || [];
+          hideSkeleton();
+          render();
+          renderFeaturedCards();
+        }
+
+        try {
+          const res = await fetch('data.json');
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const freshData = await res.json();
+          if (!freshData.mangas || !Array.isArray(freshData.mangas)) throw new Error('Invalid data');
+          
+          setCache(freshData);
+          if (JSON.stringify(freshData.mangas) !== JSON.stringify(DATA)) {
+            DATA = freshData.mangas;
+            FEATURED_IDS = freshData.featured || [];
+            hideSkeleton();
+            render();
+            renderFeaturedCards();
+            showNotification('Yeni mangalar yüklendi!', 'success');
+          }
+        } catch (err) {
+          if (!cached) {
+            document.getElementById('skeletonGrid').innerHTML = `
+              <div class="col-span-full text-center py-12">
+                <p class="text-fuchsia-400 text-lg">Veri yüklenemedi!</p>
+                <p class="text-zinc-500 text-sm mt-2">data.json dosyasını kontrol edin.</p>
+              </div>`;
+          }
+        }
+      }
+
+      function hideSkeleton() {
+        document.getElementById('skeletonGrid').classList.add('hidden');
+        document.getElementById('grid').classList.remove('hidden');
+      }
+
+      function renderSkeleton() {
+        const skeletonHTML = Array(12).fill(0).map(() => `
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-image"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text short"></div>
+          </div>
+        `).join('');
+        document.getElementById('skeletonGrid').innerHTML = skeletonHTML;
+      }
+
+      function showNotification(text, type = 'success') {
+        const notif = document.getElementById('notification');
+        document.getElementById('notifIcon').textContent = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ️';
+        document.getElementById('notifText').textContent = text;
+        notif.classList.add('show');
+        setTimeout(() => notif.classList.remove('show'), 3000);
+      }
+
+      function saveLastRead(mangaId, episodeIndex) {
+        state.lastRead[mangaId] = { episode: episodeIndex, timestamp: Date.now() };
+        localStorage.setItem('lastRead', JSON.stringify(state.lastRead));
+      }
+
+      function loadLastRead() {
+        try {
+          const saved = localStorage.getItem('lastRead');
+          if (saved) state.lastRead = JSON.parse(saved);
+        } catch (e) {}
+      }
+
+      function continueReading() {
+        if (!state.selected) return;
+        const last = state.lastRead[state.selected.id];
+        if (last && state.selected.episodes && state.selected.episodes[last.episode]) {
+          window.open(state.selected.episodes[last.episode], '_blank');
+        }
+      }
+
+      function toggleEpisodeSort() {
+        state.episodeSortDesc = !state.episodeSortDesc;
+        const btn = document.getElementById('episodeSort');
+        btn.innerHTML = state.episodeSortDesc ? '<span>↓</span><span>En Yeni</span>' : '<span>↑</span><span>En Eski</span>';
+        if (state.selected) renderEpisodesList(state.selected);
+      }
+
+      function renderEpisodesList(item) {
+        if (!item.episodes || !Array.isArray(item.episodes)) {
+          document.getElementById("dEpisodesList").innerHTML = '<p class="text-zinc-500 text-center py-4">Bölüm bulunamadı.</p>';
+          return;
+        }
+        let episodes = [...item.episodes];
+        if (!state.episodeSortDesc) episodes = episodes.reverse();
+        
+        document.getElementById("dEpisodesList").innerHTML = episodes.map((link, i) => {
+          const actualIndex = state.episodeSortDesc ? i : item.episodes.length - 1 - i;
+          const isLastRead = state.lastRead[item.id]?.episode === actualIndex;
+          return `
+            <a href="${link}" target="_blank" onclick="saveLastRead(${item.id}, ${actualIndex})" 
+               class="flex w-full items-center justify-between rounded-lg ${isLastRead ? 'bg-fuchsia-900/30 border border-fuchsia-500/30' : 'bg-zinc-900/60'} px-4 py-3 text-fuchsia-300 hover:bg-zinc-800 transition-colors">
+              <span class="flex items-center gap-2">${isLastRead ? '● ' : ''}Bölüm ${actualIndex + 1}</span>
+              <span class="text-zinc-400">↗</span>
+            </a>`;
+        }).join('');
+      }
+
+      function openContactModal() {
+        document.getElementById("contactModal").classList.add("active");
+        document.body.style.overflow = "hidden";
+        formStartTime = Date.now();
+        const form = document.getElementById("contactForm");
+        let accessKeyInput = form.querySelector('input[name="access_key"]');
+        if (!accessKeyInput) {
+          accessKeyInput = document.createElement('input');
+          accessKeyInput.type = 'hidden';
+          accessKeyInput.name = 'access_key';
+          form.insertBefore(accessKeyInput, form.firstChild);
+        }
+        accessKeyInput.value = getAccessKey();
+      }
+
+      function closeContactModal() {
+        document.getElementById("contactModal").classList.remove("active");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          document.getElementById("contactForm").reset();
+          document.getElementById("contactFormContainer").style.display = "block";
+          document.getElementById("successMessage").classList.remove("active");
+          document.getElementById("submitBtn").disabled = false;
+          document.getElementById("submitBtn").classList.remove("sending");
+          document.getElementById("submitBtn").innerHTML = "<span>Gönder</span>";
+        }, 300);
+      }
+
+      document.getElementById("contactForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        if (Date.now() - formStartTime < 3000) {
+          showNotification('Çok hızlısın! Lütfen formu dikkatlice doldur.', 'error');
+          return;
+        }
+        if (document.querySelector('[name="website"]').value !== "") {
+          showNotification('Bot tespit edildi!', 'error');
+          return;
+        }
+        
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.disabled = true;
+        submitBtn.classList.add("sending");
+        submitBtn.innerHTML = "<span class='loading-spinner'></span><span>Gönderiliyor...</span>";
+
+        try {
+          const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: new FormData(this)
+          });
+          const result = await response.json();
+          
+          if (result.success) {
+            document.getElementById("contactFormContainer").style.display = "none";
+            document.getElementById("successMessage").classList.add("active");
+            showNotification('Mesajınız gönderildi!', 'success');
+            setTimeout(() => closeContactModal(), 3000);
+          } else {
+            throw new Error(result.message || 'Bir hata oluştu');
+          }
+        } catch (error) {
+          showNotification('Mesaj gönderilemedi: ' + error.message, 'error');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("sending");
+          submitBtn.innerHTML = "<span>Gönder</span>";
+        }
+      });
+
+      document.getElementById("contactModal").addEventListener("click", function(e) {
+        if (e.target === this) closeContactModal();
+      });
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      window.addEventListener('scroll', () => {
+        const btn = document.getElementById('scrollTop');
+        btn.classList.toggle('visible', window.scrollY > 500);
+      });
+
+      function getCurrentCategories() {
+        return state.plus18Mode ? PLUS18_CATEGORIES : NORMAL_CATEGORIES;
+      }
+
+      function getCategoryCount(category) {
+        if (!DATA.length) return 0;
+        return DATA.filter(item => 
+          item.tags && Array.isArray(item.tags) && 
+          item.tags.some(tag => tag && tag.toLowerCase() === category.toLowerCase()) &&
+          (state.plus18Mode ? item.plus18 === true : item.plus18 !== true)
+        ).length;
+      }
+
+      function renderCategoryGrid(searchQuery = '') {
+        const container = document.getElementById('categoryGrid');
+        const noResults = document.getElementById('categoryNoResults');
+        const categories = getCurrentCategories();
+        const filteredCategories = searchQuery ? categories.filter(cat => cat.toLowerCase().includes(searchQuery.toLowerCase())) : categories;
+        
+        if (filteredCategories.length === 0) {
+          container.innerHTML = '';
+          noResults.classList.remove('hidden');
+          return;
+        }
+        
+        noResults.classList.add('hidden');
+        container.innerHTML = filteredCategories.map(cat => {
+          const isActive = state.tags.has(cat);
+          const count = getCategoryCount(cat);
+          return `
+            <div onclick="selectCategory('${cat}')" class="category-card ${isActive ? 'active' : ''}">
+              <div class="category-card-content">
+                <span class="category-name">${cat}</span>
+                <span class="category-count">${count} manga</span>
+              </div>
+            </div>`;
+        }).join('');
+      }
+
+      function selectCategory(category) {
+        state.tags.clear();
+        state.tags.add(category);
+        state.currentPage = 1;
+        document.getElementById("categoriesSheet").classList.remove('active');
+        document.body.style.overflow = '';
+        document.getElementById('categorySearch').value = '';
+        updateActiveFilters();
+        render();
+        showNotification(`${category} kategorisi filtrelendi`, 'success');
+      }
+
+      function updateActiveFilters() {
+        const container = document.getElementById('activeFilters');
+        const tagsContainer = document.getElementById('filterTags');
+        
+        if (state.tags.size === 0) {
+          container.classList.add('hidden');
+          return;
+        }
+        
+        container.classList.remove('hidden');
+        tagsContainer.innerHTML = Array.from(state.tags).map(tag => 
+          `<span class="active-filter">${tag} <button onclick="removeFilter('${tag}')">✕</button></span>`
+        ).join('');
+      }
+
+      function removeFilter(tag) {
+        state.tags.delete(tag);
+        state.currentPage = 1;
+        updateActiveFilters();
+        render();
+      }
+
+      function updateCategoryModeBadge() {
+        const badge = document.getElementById('categoryModeBadge');
+        if (state.plus18Mode) {
+          badge.className = 'mode-badge plus18';
+          badge.textContent = '+18 Mod';
+        } else {
+          badge.className = 'mode-badge normal';
+          badge.textContent = 'Normal Mod';
+        }
+      }
+
+      function openCategoriesSheet() {
+        document.getElementById("categoriesSheet").classList.add('active');
+        document.body.style.overflow = 'hidden';
+        updateCategoryModeBadge();
+        renderCategoryGrid();
+        document.getElementById('categorySearch').focus();
+      }
+
+      function closeCategoriesSheet() {
+        document.getElementById("categoriesSheet").classList.remove('active');
+        document.body.style.overflow = '';
+        document.getElementById('categorySearch').value = '';
+      }
+
+      function renderPagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / state.itemsPerPage);
+        const pagination = document.getElementById('pagination');
+
+        if (totalPages <= 1) {
+          pagination.innerHTML = '';
+          return;
+        }
+
+        let html = `<button onclick="goToPage(${state.currentPage - 1})" class="page-btn nav" ${state.currentPage === 1 ? 'disabled' : ''}>← Önceki</button>`;
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (i === 1 || i === totalPages || (i >= state.currentPage - 2 && i <= state.currentPage + 2)) {
+            html += `<button onclick="goToPage(${i})" class="page-btn ${i === state.currentPage ? 'active' : ''}">${i}</button>`;
+          } else if (i === state.currentPage - 3 || i === state.currentPage + 3) {
+            html += `<span class="text-zinc-500 px-2">...</span>`;
+          }
+        }
+
+        html += `<button onclick="goToPage(${state.currentPage + 1})" class="page-btn nav" ${state.currentPage === totalPages ? 'disabled' : ''}>Sonraki →</button>`;
+        pagination.innerHTML = html;
+      }
+
+      function goToPage(page) {
+        const filtered = getFiltered();
+        const totalPages = Math.ceil(filtered.length / state.itemsPerPage);
+        if (page < 1 || page > totalPages) return;
+        state.currentPage = page;
+        render();
+        document.getElementById("list").scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function fuzzyMatch(str, query) {
+        if (!str || !query) return 0;
+        str = str.toLowerCase();
+        query = query.toLowerCase();
+        if (str.includes(query)) return 2;
+        let matches = 0, queryIdx = 0;
+        for (let i = 0; i < str.length && queryIdx < query.length; i++) {
+          if (str[i] === query[queryIdx]) { matches++; queryIdx++; }
+        }
+        return matches >= query.length * 0.7 ? 1 : 0;
+      }
+
+      function highlightText(text, query) {
+        if (!text || !query) return text || '';
+        const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+      }
+
+      function makeBadge(text, variant = "default") {
+        const base = "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1 whitespace-nowrap";
+        const map = {
+          default: base + " bg-zinc-800/80 text-zinc-200 ring-zinc-700",
+          pink: base + " bg-fuchsia-500/15 text-fuchsia-300 ring-fuchsia-500/30",
+        };
+        const span = document.createElement("span");
+        span.className = map[variant] || map.default;
+        span.innerHTML = text;
+        return span;
+      }
+
+      function createCard(item) {
+        const btn = document.createElement("button");
+        btn.className = "group flex w-full flex-col gap-3 text-left focus:outline-none card-hover animate-fade-in";
+        btn.onclick = () => openDetails(item);
+
+        const isNew = isNewManga(item.addedDate);
+        const newBadge = isNew ? '<div class="badge-new">YENİ</div>' : '';
+        const plus18Badge = item.plus18 ? '<div class="badge-plus18">+18</div>' : '';
+        const episodeCount = item.episodes && Array.isArray(item.episodes) ? item.episodes.length : 0;
+
+        const titleHtml = state.query ? highlightText(item.title, state.query) : (item.title || 'İsimsiz');
+        const synopsisHtml = state.query ? highlightText(item.synopsis, state.query) : (item.synopsis || '');
+
+        btn.innerHTML = `
+          <div class="relative">
+            <div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900">
+              <img alt="${item.title || 'Manga'}" class="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform duration-300 group-hover:scale-105" src="${item.image || ''}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22%3E%3C/svg%3E'" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80"></div>
+              ${newBadge}
+              ${plus18Badge}
+            </div>
+            <div class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10 group-hover:ring-fuchsia-400/30"></div>
+            <div class="absolute left-3 bottom-3 z-10">${makeBadge(episodeCount + ' Bölüm').outerHTML}</div>
+          </div>
+          <div class="px-0.5">
+            <h3 class="line-clamp-1 text-base font-semibold text-zinc-100">${titleHtml}</h3>
+            <p class="line-clamp-2 text-sm text-zinc-400">${synopsisHtml}</p>
+            <div class="mt-2 flex flex-wrap gap-1.5">${(item.tags || []).slice(0,3).map(t=>makeBadge(t,'default').outerHTML).join("")}</div>
+          </div>`;
+        return btn;
+      }
+
+      function openDetails(item) {
+        if (!item) return;
+        state.selected = item;
+        
+        document.getElementById("dImage").src = item.image || '';
+        document.getElementById("dTitle").textContent = item.title || 'İsimsiz';
+        document.getElementById("dEpisodes").textContent = (item.episodes && Array.isArray(item.episodes) ? item.episodes.length : 0) + " Bölüm";
+        document.getElementById("dSynopsis").textContent = item.synopsis || 'Açıklama bulunmuyor.';
+        document.getElementById("dTags").innerHTML = (item.tags || []).map(t=>makeBadge(t,'default').outerHTML).join("");
+        document.getElementById("dAddedDate").textContent = item.addedDate || '';
+
+        const isNew = isNewManga(item.addedDate);
+        document.getElementById("dNewBadge").classList.toggle("hidden", !isNew);
+        document.getElementById("dNewTag").classList.toggle("hidden", !isNew);
+        document.getElementById("dPlus18Badge").classList.toggle("hidden", !item.plus18);
+        document.getElementById("dPlus18Tag").classList.toggle("hidden", !item.plus18);
+
+        renderEpisodesList(item);
+        updateContinueReading();
+        document.getElementById("details").classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function getFiltered() {
+        if (!Array.isArray(DATA)) return [];
+        let items = DATA.slice();
+        if (state.plus18Mode) items = items.filter(i => i.plus18 === true);
+        else items = items.filter(i => i.plus18 !== true);
+        if (state.tags.size) items = items.filter(i => i.tags && Array.isArray(i.tags) && i.tags.some(t => state.tags.has(t)));
+        if (state.query) {
+          const q = state.query.toLowerCase();
+          items = items.filter(i => fuzzyMatch(i.title, q) || fuzzyMatch(i.synopsis, q) || (i.tags && i.tags.some(t => fuzzyMatch(t, q))));
+        }
+        return items;
+      }
+
+      function render() {
+        let all = getFiltered();
+        all.sort((a, b) => {
+          const aIsNew = isNewManga(a.addedDate);
+          const bIsNew = isNewManga(b.addedDate);
+          if (aIsNew && !bIsNew) return -1;
+          if (!aIsNew && bIsNew) return 1;
+          return parseDate(b.addedDate) - parseDate(a.addedDate);
+        });
+
+        document.getElementById('countInfo').textContent = `${all.length} manga`;
+
+        const start = (state.currentPage - 1) * state.itemsPerPage;
+        const view = all.slice(start, start + state.itemsPerPage);
+
+        const grid = document.getElementById('grid');
+        grid.innerHTML = "";
+        if (view.length === 0) {
+          grid.innerHTML = `<div class="col-span-full text-center py-12"><p class="text-zinc-400">Sonuç bulunamadı.</p></div>`;
+        } else {
+          view.forEach(item => grid.appendChild(createCard(item)));
+        }
+        renderPagination(all.length);
+      }
+
+      function renderFeaturedCards() {
+        const container = document.getElementById('featuredCards');
+        if (!container) return;
+        
+        if (!Array.isArray(DATA) || DATA.length === 0) {
+          container.innerHTML = '<p class="text-zinc-500 col-span-2 text-center">Yükleniyor...</p>';
+          return;
+        }
+
+        let filtered = DATA.filter(i => state.plus18Mode ? i.plus18 === true : i.plus18 !== true);
+        let featured = [];
+        if (FEATURED_IDS && FEATURED_IDS.length > 0) {
+          featured = FEATURED_IDS.map(id => filtered.find(m => m.id === id)).filter(Boolean);
+        }
+        if (featured.length === 0) {
+          const sorted = [...filtered].sort((a, b) => parseDate(b.addedDate) - parseDate(a.addedDate));
+          featured = sorted.slice(0, 2);
+        }
+
+        if (featured.length === 0) {
+          container.innerHTML = '<p class="text-zinc-500 col-span-2 text-center">Manga bulunamadı.</p>';
+          return;
+        }
+
+        container.innerHTML = featured.map((item, index) => {
+          const episodeCount = item.episodes && Array.isArray(item.episodes) ? item.episodes.length : 0;
+          const isNew = isNewManga(item.addedDate);
+          return `
+          <div onclick='openDetailsById(${item.id})' class="featured-card animate-fade-in" style="animation-delay: ${index * 0.15}s">
+            <img alt="${item.title || 'Manga'}" src="${item.image || ''}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22%3E%3C/svg%3E'" />
+            <div class="featured-card-overlay"></div>
+            <div class="badge-expected">BEKLENEN</div>
+            ${isNew ? '<div class="badge-new">YENİ</div>' : ''}
+            ${item.plus18 ? '<div class="badge-plus18">+18</div>' : ''}
+            <div class="featured-card-content">
+              <h3 class="featured-card-title">${item.title || 'İsimsiz'}</h3>
+              <div class="featured-card-meta">
+                <span class="featured-card-episodes">${episodeCount} Bölüm</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      function openDetailsById(id) {
+        const item = DATA.find(d => d.id === id);
+        if (item) openDetails(item);
+      }
+
+      function showSection(section) {
+        document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+        if (event && event.target) event.target.closest('.bottom-nav-item').classList.add('active');
+        if (section === 'home') {
+          state.currentPage = 1;
+          state.tags.clear();
+          state.query = '';
+          document.getElementById('search').value = '';
+          document.getElementById('searchMobile').value = '';
+          updateActiveFilters();
+          render();
+        }
+      }
+
+      document.getElementById("closeDetails").onclick = () => {
+        document.getElementById("details").classList.remove("active");
+        document.body.style.overflow = "";
+      };
+
+      document.getElementById("details").onclick = (e) => {
+        if (e.target === document.getElementById("details")) {
+          document.getElementById("details").classList.remove("active");
+          document.body.style.overflow = "";
+        }
+      };
+
+      const detailsModalContent = document.querySelector('.details-modal-content');
+      if (detailsModalContent) {
+        detailsModalContent.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; });
+        detailsModalContent.addEventListener('touchend', (e) => {
+          if (e.changedTouches[0].clientY - touchStartY > 100) {
+            document.getElementById("details").classList.remove("active");
+            document.body.style.overflow = "";
+          }
+        });
+      }
+
+      document.getElementById("toggleCategories").onclick = openCategoriesSheet;
+      document.getElementById("closeCategoriesSheet").onclick = closeCategoriesSheet;
+
+      document.getElementById("plus18Toggle").onchange = (e) => {
+        state.plus18Mode = e.target.checked;
+        document.getElementById("plus18Banner").classList.toggle("hidden", !state.plus18Mode);
+        state.tags.clear();
+        state.currentPage = 1;
+        updateActiveFilters();
+        render();
+        renderFeaturedCards();
+      };
+
+      document.getElementById("closePlus18Banner").onclick = () => {
+        document.getElementById("plus18Banner").classList.add("hidden");
+      };
+
+      function handleSearch(e) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          state.query = e.target.value;
+          state.currentPage = 1;
+          render();
+        }, 300);
+      }
+
+      document.getElementById("search").oninput = handleSearch;
+      document.getElementById("searchMobile").oninput = handleSearch;
+      document.getElementById("categorySearch").oninput = (e) => renderCategoryGrid(e.target.value);
+      
+      document.getElementById("openSearch").onclick = () => {
+        document.getElementById("mobileSearchBar").classList.remove("hidden");
+        document.getElementById("searchMobile").focus();
+      };
+      
+      document.getElementById("closeMobileSearch").onclick = () => {
+        document.getElementById("mobileSearchBar").classList.add("hidden");
+      };
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.getElementById("details").classList.remove("active");
+          document.getElementById("categoriesSheet").classList.remove('active');
+          document.getElementById("contactModal").classList.remove('active');
+          document.body.style.overflow = '';
+        }
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+          e.preventDefault();
+          document.getElementById('search').focus();
+        }
+      });
+
+      document.getElementById("categoriesSheet").addEventListener('click', (e) => {
+        if (e.target === document.getElementById("categoriesSheet")) closeCategoriesSheet();
+      });
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+      
+      renderSkeleton();
+      loadLastRead();
+      loadData();
+
+      setInterval(() => {
+        render();
+        renderFeaturedCards();
+      }, 3600000);
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(console.error);
+      }
+    </script>
+  </body>
+</html>
