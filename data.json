@@ -1,33 +1,31 @@
 {
-  "featured": [1, 2],
+  "featured": [
+    1,
+    2
+  ],
   "mangas": [
     {
       "id": 1,
       "title": "Attack on Titan",
       "synopsis": "İnsanlık, devasa Titanların saldırısından korunmak için devasa duvarların arkasında yaşıyor. Eren Yeager ve arkadaşları, özgürlüklerini kazanmak için Titanlara karşı savaş açıyor.",
-      "image": "https://example.com/aot.jpg",
+      "image": "https://upload.wikimedia.org/wikipedia/en/d/d6/Shingeki_no_Kyojin_manga_volume_1.jpg",
       "episodes": [
         "https://example.com/aot/1",
         "https://example.com/aot/2",
-        "https://example.com/aot/3"
+        "https://example.com/aot/3",
+        "https://example.com/aot/4",
+        "https://example.com/aot/5"
       ],
-      "tags": ["Aksiyon", "Drama", "Fantastik", "Shounen"],
-      "plus18": false,
-      "addedDate": "24.03.2026"
-    },
-    {
-      "id": 2,
-      "title": "Attack on Titan",
-      "synopsis": "İnsanlık, devasa Titanların saldırısından korunmak için devasa duvarların arkasında yaşıyor. Eren Yeager ve arkadaşları, özgürlüklerini kazanmak için Titanlara karşı savaş açıyor.",
-      "image": "https://example.com/aot.jpg",
-      "episodes": [
-        "https://example.com/aot/1",
-        "https://example.com/aot/2",
-        "https://example.com/aot/3"
+      "tags": [
+        "Aksiyon",
+        "Drama",
+        "Fantastik",
+        "Shounen",
+        "Savaş",
+        "Trajedi"
       ],
-      "tags": ["Aksiyon", "Drama", "Fantastik", "Shounen"],
       "plus18": false,
-      "addedDate": "24.03.2026"
+      "addedDate": "01.06.2026"
     }
     
   ]
