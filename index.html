@@ -97,6 +97,7 @@
     </style>
   <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 
   <body class="bg-[#0a0a0b] text-[#f5f5f5] min-h-screen flex flex-col">
@@ -436,14 +437,19 @@
     </footer>
 
     <script>
-      const ALL_CATEGORIES = [
+      // ============================================
+      // NORMAL MANGA KATEGORİLERİ (+18 KAPALIyken gösterilir)
+      // ============================================
+      const NORMAL_CATEGORIES = [
         "Aksiyon", "Macera", "Komedi", "Drama", "Fantastik", "Bilim Kurgu",
         "Korku", "Romantik", "Shounen", "Seinen", "Shoujo", "Josei",
         "Spor", "Dogaustu", "Gizem", "Psikolojik", "Trajedi", "Savas",
-        "Isekai", "Hayatta Kalma", "Okul", "Tarihi", "Polisiye", "Ecchi",
-        "Hentai", "Mature"
+        "Isekai", "Hayatta Kalma", "Okul", "Tarihi", "Polisiye"
       ];
 
+      // ============================================
+      // +18 MANGA KATEGORİLERİ (+18 AÇIKken gösterilir)
+      // ============================================
       const PLUS18_CATEGORIES = ["Anne", "Abla", "Abi", "Ensest", "Adult 3D Roman", "Adult Çizgi Roman", "Ahegao", "Aldatma", "Anal", 
       "Anne-Oğul Ensest", "Aşağılama", "Ayak fetişi", "Ayak Yalama", , "Baba" ,"Baba-Kız Ensest", "Baldız", "Baştan çıkarma", "Bdsm", "Bikini", "Biseksüel",
       "Büyük Göğüs", "Büyük Göt","Büyük Sik","BüyükAnne","Canavar","Canavar Kadın","Çifte Giriş","Çizgi Film","Çorap Fetişi","Cosplay","Crossdresser",
@@ -490,8 +496,8 @@
 
       function getDailyPicks() {
         const seed = getDailySeed();
-        let available = DATA.filter(function(item) {
-          if (state.plus18Mode) return true;
+        var available = DATA.filter(function(item) {
+          if (state.plus18Mode) return item.plus18 === true;
           return item.plus18 !== true;
         });
 
@@ -687,8 +693,8 @@
           setTimeout(function() { dice.classList.remove('rolling'); }, 500);
         }
 
-        let available = DATA.filter(function(item) {
-          if (state.plus18Mode) return true;
+        var available = DATA.filter(function(item) {
+          if (state.plus18Mode) return item.plus18 === true;
           return item.plus18 !== true;
         });
 
@@ -783,17 +789,29 @@
 
       function getCurrentCategories() {
         if (state.plus18Mode) {
-          return ALL_CATEGORIES.slice();
+          // +18 AÇIK → SADECE +18 kategorileri göster
+          return PLUS18_CATEGORIES;
         }
-        return ALL_CATEGORIES.filter(function(cat) { return !PLUS18_CATEGORIES.includes(cat); });
+        // +18 KAPALI → SADECE normal kategorileri göster
+        return NORMAL_CATEGORIES;
       }
 
       function getCategoryCount(category) {
-        if (!DATA.length) return 0;
+        if (!Array.isArray(DATA) || !DATA.length) return 0;
+
         return DATA.filter(function(item) {
-          return item.tags && Array.isArray(item.tags) && 
-            item.tags.some(function(tag) { return tag && tag.toLowerCase() === category.toLowerCase(); }) &&
-            (state.plus18Mode ? true : item.plus18 !== true);
+          // Etiket eşleşmesi
+          var tagMatch = item.tags && Array.isArray(item.tags) && 
+            item.tags.some(function(tag) { 
+              return tag && tag.toLowerCase() === category.toLowerCase(); 
+            });
+
+          // Mod eşleşmesi
+          var modeMatch = state.plus18Mode 
+            ? (item.plus18 === true)    // +18 AÇIK → sadece +18 mangalar
+            : (item.plus18 !== true);   // +18 KAPALI → sadece normal mangalar
+
+          return tagMatch && modeMatch;
         }).length;
       }
 
@@ -1091,14 +1109,33 @@
 
       function getFiltered() {
         if (!Array.isArray(DATA)) return [];
-        let items = DATA.slice();
-        if (state.plus18Mode) items = items.filter(function(i) { return i.plus18 === true; });
-        else items = items.filter(function(i) { return i.plus18 !== true; });
-        if (state.tags.size) items = items.filter(function(i) { return i.tags && Array.isArray(i.tags) && i.tags.some(function(t) { return state.tags.has(t); }); });
-        if (state.query) {
-          const q = state.query.toLowerCase();
-          items = items.filter(function(i) { return fuzzyMatch(i.title, q) || fuzzyMatch(i.synopsis, q) || (i.tags && i.tags.some(function(t) { return fuzzyMatch(t, q); })); });
+
+        // Önce +18 moduna göre filtrele
+        var items = DATA.filter(function(i) {
+          if (state.plus18Mode) {
+            return i.plus18 === true;   // +18 AÇIK → sadece +18 mangalar
+          }
+          return i.plus18 !== true;     // +18 KAPALI → sadece normal mangalar
+        });
+
+        // Sonra tag filtresi varsa uygula
+        if (state.tags.size) {
+          items = items.filter(function(i) {
+            return i.tags && Array.isArray(i.tags) && i.tags.some(function(t) { 
+              return state.tags.has(t); 
+            });
+          });
         }
+
+        // Sonra arama sorgusu varsa uygula
+        if (state.query) {
+          var q = state.query.toLowerCase();
+          items = items.filter(function(i) {
+            return fuzzyMatch(i.title, q) || fuzzyMatch(i.synopsis, q) || 
+              (i.tags && i.tags.some(function(t) { return fuzzyMatch(t, q); }));
+          });
+        }
+
         return items;
       }
 
@@ -1136,7 +1173,10 @@
           return;
         }
 
-        let filtered = DATA.filter(function(i) { return state.plus18Mode ? i.plus18 === true : i.plus18 !== true; });
+        var filtered = DATA.filter(function(i) {
+          if (state.plus18Mode) return i.plus18 === true;
+          return i.plus18 !== true;
+        });
         let featured = [];
         if (FEATURED_IDS && FEATURED_IDS.length > 0) {
           featured = FEATURED_IDS.map(function(id) { return filtered.find(function(m) { return m.id === id; }); }).filter(Boolean);
